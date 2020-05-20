@@ -3,20 +3,23 @@ import numpy as np
 
 
 def find_correspondence_points(img1, img2):
-    sift = cv2.xfeatures2d.SIFT_create()
-
+    #sift = cv2.xfeatures2d.SIFT_create()
+    orb = cv2.ORB_create()
     # find the keypoints and descriptors with SIFT
-    kp1, des1 = sift.detectAndCompute(
-        cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY), None)
-    kp2, des2 = sift.detectAndCompute(
-        cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY), None)
+
+    kp1, des1 = orb.detectAndCompute(cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY), None)
+    kp2, des2 = orb.detectAndCompute(cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY), None)
+    
 
     # Find point matches
-    FLANN_INDEX_KDTREE = 0
-    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
-    search_params = dict(checks=50)
-    flann = cv2.FlannBasedMatcher(index_params, search_params)
-    matches = flann.knnMatch(des1, des2, k=2)
+    #FLANN_INDEX_KDTREE = 0
+    #index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+    #search_params = dict(checks=50)
+    #flann = cv2.FlannBasedMatcher(index_params, search_params)
+    #matches = flann.knnMatch(des1, des2, k=2)
+
+    bf = cv2.BFMatcher()
+    matches = bf.knnMatch(des1, des2, k=2)
 
     # Apply Lowe's SIFT matching ratio test
     good = []
